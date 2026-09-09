@@ -20,6 +20,15 @@ function normalizeCabin(cabin) {
   };
 }
 
+function normalizeBooking(booking) {
+  if (!booking) return booking;
+
+  return {
+    ...booking,
+    cabins: booking.cabins ? normalizeCabin(booking.cabins) : booking.cabins,
+  };
+}
+
 export async function getCabin(id) {
   const { data, error } = await supabase
     .from("cabins")
@@ -93,7 +102,7 @@ export async function getBooking(id) {
     throw new Error("Booking could not get loaded");
   }
 
-  return data;
+  return normalizeBooking(data);
 }
 
 export async function getBookings(guestId) {
@@ -111,7 +120,7 @@ export async function getBookings(guestId) {
     throw new Error("Bookings could not get loaded");
   }
 
-  return data;
+  return data.map(normalizeBooking);
 }
 
 export async function getBookedDatesByCabinId(cabinId) {

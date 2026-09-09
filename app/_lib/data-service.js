@@ -5,6 +5,21 @@ import { notFound } from "next/navigation";
 /////////////
 // GET
 
+function normalizeImageUrl(image) {
+  if (!image) return image;
+
+  return image.replace(/(https?:\/\/[^/]+)\/{2,}storage\//, "$1/storage/");
+}
+
+function normalizeCabin(cabin) {
+  if (!cabin) return cabin;
+
+  return {
+    ...cabin,
+    image: normalizeImageUrl(cabin.image),
+  };
+}
+
 export async function getCabin(id) {
   const { data, error } = await supabase
     .from("cabins")
@@ -20,7 +35,7 @@ export async function getCabin(id) {
     notFound();
   }
 
-  return data;
+  return normalizeCabin(data);
 }
 
 export async function getCabinPrice(id) {
@@ -51,7 +66,7 @@ export const getCabins = async function () {
     throw new Error("Cabins could not be loaded");
   }
 
-  return data;
+  return data.map(normalizeCabin);
 };
 
 // Guests are uniquely identified by their email address

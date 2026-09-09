@@ -8,6 +8,7 @@ const josefin = Josefin_Sans({ subsets: ["latin"], display: "swap" });
 import "@/app/_styles/globals.css";
 import Header from "@/app/_components/Header";
 import { ReservationProvider } from "./_components/ReservationContext";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata = {
   title: {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
         <div className="flex-1 px-8 py-12 grid">
           <main className="max-w-7xl mx-auto w-full">
             <ReservationProvider>{children}</ReservationProvider>
+            <Analytics />
           </main>
         </div>
       </body>
